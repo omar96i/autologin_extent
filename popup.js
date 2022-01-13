@@ -44,6 +44,10 @@ $(document).ready(function() {
       $(".tittle").show()
       $(".saved").show()
       $(".save").hide()
+      chrome.storage.sync.get('tipo_pagina', function (tipo_pagina) {
+        type = tipo_pagina.tipo_pagina;
+        $("#text-pagina").html(type)
+      });
     }
   });
 });
@@ -91,30 +95,44 @@ function setDatosUser(){
       chrome.storage.sync.get('password', function (password) {
         clave = password.password;
         document.getElementsByName("log_in[password]")[0].value = clave
-        document.getElementsByClassName("form_actions").children[1].click()
+        document.getElementsByClassName("form_actions")[0].children[1].click()
       });
-    }else if(tipo_cuenta == "amatur.tv"){
+    }else if(tipo_cuenta == "Camsoda"){
       chrome.storage.sync.get('user', function (user) {
         usuario = user.user;
-        document.getElementById("login-username").value = usuario
+        document.getElementsByName("username")[0].value = usuario
       });
       chrome.storage.sync.get('password', function (password) {
         clave = password.password;
-        document.getElementById("login-password").value = clave
-        document.getElementsByClassName("cy_loginLogin")[0].click()
+        document.getElementsByName("password")[0].value = clave
+        setTimeout(function (){ document.getElementsByClassName("form-group")[4].children[0].click() }, 2000);
       });
     }
+    
+    // else if(tipo_cuenta == "amatur.tv"){
+    //   chrome.storage.sync.get('user', function (user) {
+    //     usuario = user.user;
+    //     document.getElementById("login-username").value = usuario
+    //   });
+    //   chrome.storage.sync.get('password', function (password) {
+    //     clave = password.password;
+    //     document.getElementById("login-password").value = clave
+    //   });
+    // }
   });
   
 }
-
-
-
-
 
 function getDatosUser(){
   user = document.getElementById("user").value
   password = document.getElementById("password").value
   tipo_pagina = document.getElementById("tipo_pagina").value
+  if(user == "" || password == "" || tipo_pagina == ""){
+    document.getElementById("error-alert").style.display = "block"
+    document.getElementById("success-alert").style.display = "none"
+  }else{
+    document.getElementById("error-alert").style.display = "none"
+    document.getElementById("success-alert").style.display = "block"
+  }
   chrome.storage.sync.set({'user': user, 'password': password, 'tipo_pagina': tipo_pagina})
 }
